@@ -1,49 +1,31 @@
+// Tableau des cartes
 let deck = [];
-
-// Charge automatiquement toutes les images du dossier /cartes
-async function loadImages() {
-    try {
-        const response = await fetch("cartes/");
-        const html = await response.text();
-
-        const parser = new DOMParser();
-        const doc = parser.parseFromString(html, "text/html");
-        const links = [...doc.querySelectorAll("a")];
-
-        deck = links
-            .map(link => link.getAttribute("href"))
-            .filter(name => name.match(/\.(png|jpg|jpeg|webp|gif)$/i))
-            .map(filename => "cartes/" + filename);
-
-    } catch (e) {
-        console.error("Impossible de charger les images :", e);
-    }
+for (let i = 1; i <= 31; i++) {
+    deck.push(`cartes/${String(i).padStart(2,'0')}.jpg`);
 }
 
-async function createDeck() {
-    await loadImages();
-    document.getElementById("card-display").innerText = "Deck prêt !";
-}
+// Fonction pour créer le deck (copie pour réinitialiser)
+let currentDeck = [...deck];
 
 function drawCard() {
-    if (deck.length === 0) {
+    if (currentDeck.length === 0) {
         document.getElementById("card-display").innerText = "Le deck est vide !";
         return;
     }
 
-    const index = Math.floor(Math.random() * deck.length);
-    const card = deck.splice(index, 1)[0];
+    const index = Math.floor(Math.random() * currentDeck.length);
+    const card = currentDeck.splice(index, 1)[0];
 
     document.getElementById("card-display").innerHTML =
         `<img src="${card}" alt="carte">`;
 }
 
 function resetDeck() {
-    createDeck();
+    currentDeck = [...deck];
+    document.getElementById("card-display").innerText = "Deck recréé ! Tu peux piocher.";
 }
 
+// Lier les boutons
 document.getElementById("draw").addEventListener("click", drawCard);
 document.getElementById("reset").addEventListener("click", resetDeck);
-
-createDeck();
 
