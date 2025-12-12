@@ -2,21 +2,32 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>Piocheur de Cartes</title>
-    <link rel="stylesheet" href="css/style.css">
+    <title>Choix du deck</title>
+    <link rel="stylesheet" href="./css/style.css">
 </head>
 <body>
 
-<h1>Pioche une carte ! 🎴</h1>
+<h1>Choix du deck</h1>
 
-<div id="card-display">Aucune carte tirée</div>
+<div class="deck-selection">
+	<!-- Deck Arcs -->
+    <div class="deck-card">
+        <h2>Deck Arcs</h2>
+        <label for="players-arcs">Nombre de joueurs :</label>
+        <select id="players-arcs">
+            <option value="2">2</option>
+            <option value="4">3/4</option>
+        </select>
+		<button class="deck-btn" data-deck="arcs" data-players-target="players-arcs">Jouer</button>
+    </div>
 
-<br>
-<button id="draw">Piocher une carte</button>
+	<!-- Deck T. Solo -->
+	<div class="deck-card">
+        <h2>Deck T. Solo</h2>
+		<button class="deck-btn" data-deck="tsolo" data-players="1">Jouer</button>
+    </div>
+</div>
 
-<button id="reset">Recréer le deck</button>
-
-<script src="js/app.js"></script>
+<script type="module" src="./js/app.js"></script>
 </body>
 </html>
-
