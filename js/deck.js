@@ -1,39 +1,55 @@
+import { CONFIG } from "./config.js";
 import { getURLParams } from "./utils/url.js";
+import { shuffle } from "./utils/shuffle.js";
+import { generateDeckArcs, drawInitial } from "./decks/arcs.js";
 
-const { deck, players } = getURLParams();
+const { deckName, players } = getURLParams();
 
-document.title = `${deck.toUpperCase()}`;
+document.title = `${deckName.toUpperCase()}`;
 const h1 = document.querySelector('h1');
-h1.textContent=`${deck.toUpperCase()}`;
+h1.textContent =`${deckName.toUpperCase()}`;
 h1.style.visibility = "visible";
 
-function generateDeck() {
-    const deckSize = 31;
-    const newDeck = [];
-    
-    for (let i = 1; i <= deckSize; i++) {
-        newDeck.push(`cartes/${String(i).padStart(2,'0')}.jpg`);
-    }
-    return newDeck;
+let deck = [];
+if (deckName === CONFIG.DECK_ARCS_NAME) {
+    deck = generateDeckArcs();
 }
 
-let cardDeck = generateDeck();
+shuffle(deck);
 
-const display = document.getElementById("card-display");
-const drawBtn = document.getElementById("draw");
-const resetBtn = document.getElementById("reset");
+let hand = [];
+if (deckName == CONFIG.DECK_ARCS_NAME) {
+    hand = drawInitial(deck, players);
+}
+displayHand(hand);
 
-drawBtn.addEventListener("click", () => {
-    if (cardDeck.length === 0) {
-        display.innerText = "Le deck est vide !";
+function displayHand(cards) {
+    const container = document.getElementById("cards-container");
+    container.innerHTML = "";
+
+    cards.forEach((card, index) => {
+        const wrap = document.createElement("div");
+        wrap.classList.add("card"); // <-- important pour le CSS
+        wrap.innerHTML = `
+            <img src="${card.image}" alt="${card.id}">
+            <button class="replace-btn" data-index="${index}">Remplacer</button>
+        `;
+        container.appendChild(wrap);
+    });
+
+    document.querySelectorAll(".replace-btn").forEach(btn => {
+        btn.onclick = () => replaceCard(btn.dataset.index);
+    });
+}
+
+function replaceCard(index) {
+    if (deck.length === 0) {
+        alert("Le deck est vide !");
+        console.log("Deck vide, impossible de remplacer");
         return;
     }
-    const idx = Math.floor(Math.random() * cardDeck.length);
-    const card = cardDeck.splice(idx, 1)[0];
-    display.innerHTML = `<img src="${card}" width="200">`;
-});
-
-resetBtn.addEventListener("click", () => {
-    cardDeck = generateDeck();
-    display.innerText = "Deck recréé !";
-});
+    const newCard = deck.pop();
+    console.log("Remplacement de la carte à l’index", index, "par", newCard);
+    const img = document.querySelectorAll(".card img")[index];
+    img.src = newCard.image;
+}

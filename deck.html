@@ -3,20 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <title>Piocheur de Cartes</title>
-    <link rel="stylesheet" href="./css/style.css">
+    <link rel="stylesheet" href="./css/deck.css">
+    <script type="module" src="./js/deck.js" defer></script>
 </head>
 <body>
 
-<button id="btn-back" class="back-button">← Retour</button>
+<a href="index.html" class="back-button">← Retour</a>
 
-<h1 style="visibility: hidden;">Chargement...</h1>
+<h1 id="deck-title" style="visibility: hidden;">Deck</h1>
 
 <button id="draw">Pioche</button>
 <button id="reset">Recréer le deck</button>
-<div id="card-display">Aucune carte tirée</div>
+<div id="card-display">...</div>
 
-<script type="module" src="./js/deck.js">
-    
-</script>
+<div id="cards-container" class="cards-grid"></div>
+
 </body>
 </html>
